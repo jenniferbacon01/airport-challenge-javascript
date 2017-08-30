@@ -1,6 +1,9 @@
+"use strict";
+
 describe('Plane',function(){
-  // var plane;
-  // var weather;
+  var plane;
+  var weather;
+  var doubleweather;
 
   describe('sunny', function(){
 
