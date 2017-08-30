@@ -1,3 +1,5 @@
+"use strict";
+
 var Plane = function(airport, weather = new Weather()){
   this.airport = airport;
   this.weather = weather;
