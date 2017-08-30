@@ -1,14 +1,45 @@
 describe('Plane',function(){
-  var plane;
+  // var plane;
+  // var weather;
 
-  beforeEach(function() {
-    plane = new Plane();
-  });
+  describe('sunny', function(){
+
+    beforeEach(function() {
+      weather = {isSunny: function(){
+        return true;
+      }};
+      plane = new Plane(null, weather);
+    });
+
+    it('is null', function() {
+      expect(plane.airport).toEqual(null);
+    });
 
     it('lands', function() {
       plane.land("heathrow");
       expect(plane.airport).toEqual("heathrow");
     });
+
+    it('is not in the airport after takeoff', function() {
+      plane.land("heathrow");
+      plane.takeoff();
+      expect(plane.airport).toEqual(null);
+    });
+
+  });
+
+  describe('stormy', function(){
+    it('cannot takeoff when weather is stormy', function() {
+      doubleweather = {isSunny: function(){
+        return false;
+      }};
+      plane = new Plane(null, doubleweather);
+      plane.land("heathrow");
+      expect( function(){ plane.takeoff() } ).toThrow("No takeoff under stormy weather conditions");
+      expect(plane.airport).toEqual("heathrow");
+    });
+  });
+});
 
 
 
@@ -49,4 +80,3 @@ describe('Plane',function(){
   //     expect(javabuzz.isDivisibleByThree(3)).toBe(true);
   //   });
   // });
-});
