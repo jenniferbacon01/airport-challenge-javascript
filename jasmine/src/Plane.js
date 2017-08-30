@@ -1,17 +1,23 @@
 "use strict";
 
-var Plane = function(airport, weather = new Weather()){
-  this.airport = airport;
+var Plane = function(weather = new Weather(), airport = null){
   this.weather = weather;
+  this.airport = airport;
 };
 
 Plane.prototype.land = function (airport) {
-  this.airport = airport;
+  if(this.weather.isSunny() === true ){
+    if(this.airport.isFull() === false){
+      this.airport = airport;
+    }
+    else{ throw "No landing when the airport is full" };
+  }
+  else{ throw "No landing under stormy weather conditions"};
 };
 
 Plane.prototype.takeoff = function () {
   if(this.weather.isSunny() === true){
-  this.airport = null;
+    this.airport = null;
   }
   else {throw "No takeoff under stormy weather conditions"};
 };
