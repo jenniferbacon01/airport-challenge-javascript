@@ -6,76 +6,67 @@ describe('Plane',function(){
   var weather;
   var doubleweather;
   var doubleairport;
-
-  // describe('sunny', function(){
-  //
-  //
-  //   describe('not full', function(){
-
-      // beforeEach(function() {
+  var hasCalledAddPlane;
+  var hasCalledRemovePlane;
 
 
-      // });
+  describe('sunny', function(){
 
-      it('is null', function() {
-        weather = {isSunny: function(){
-          return true;
-        }};
+    beforeEach(function() {
+      weather = {isSunny: function(){
+        return true;
+      }};
+    });
+
+    describe('airport not full', function(){
+
+      beforeEach(function() {
+        hasCalledAddPlane = false;
+        hasCalledRemovePlane = false;
         doubleairport = {
           isFull: function(){
             return false;
           },
-          name: null};
-        plane = new Plane(weather, doubleairport);
-        expect(plane.airport.name).toEqual(null);
+          planes: 5,
+          name: "heathrow",
+          removePlane: function() {
+            hasCalledRemovePlane = true;
+          },
+          addPlane: function() {
+            hasCalledAddPlane = true;
+          }
+        };
       });
 
       it('lands', function() {
-        weather = {isSunny: function(){
-          return true;
-        }};
-        doubleairport = {
-          isFull: function(){
-            return false;
-          },
-          name: "heathrow"};
         plane = new Plane(weather, doubleairport);
         plane.land(doubleairport);
         expect(plane.airport.name).toEqual("heathrow");
       });
-      //
+
       it('is not in the airport after takeoff', function() {
-        weather = {isSunny: function(){
-          return true;
-        }};
-        doubleairport = {
-          isFull: function(){
-            return false;
-          },
-          name: "heathrow"};
         plane = new Plane(weather, doubleairport);
         plane.takeoff();
         expect(plane.airport).toEqual(null);
       });
 
-    // });
+      it('airport responds to plane landing at it', function() {
+        plane = new Plane(weather);
+        plane.land(doubleairport);
+        expect(hasCalledAddPlane).toBe(true)
+      });
 
-    // describe('full', function(){
-    //
-    //   beforeEach(function() {
-    //     weather = {isSunny: function(){
-    //       return true;
-    //     }};
-    //     plane = new Plane(null, weather);
-    //     doubleairport = {isFull: function(){
-    //       return true;
-    //     }}
-    //   });
-    //
+      it('airport responds to plane taking off from it', function() {
+        plane = new Plane(weather, doubleairport);
+        plane.takeoff();
+        expect(hasCalledRemovePlane).toBe(true)
+      });
+
+    });
+
+    describe('airport full', function(){
+
       it('cannot land when the airport is full', function() {
-        weather = {isSunny: function(){
-          return true;
-        }};
         doubleairport = {
           isFull: function(){
             return true;
@@ -84,21 +75,13 @@ describe('Plane',function(){
           plane = new Plane(weather, doubleairport);
         expect( function(){ plane.land(doubleairport) } ).toThrow("No landing when the airport is full");
       });
-    //
-    // });
 
-  // });
+    });
 
-  // describe('stormy', function(){
-  //
-  //   beforeEach(function() {
-  //     doubleweather = {isSunny: function(){
-  //       return false;
-  //     }};
-  //     plane = new Plane(null, doubleweather);
-  //     plane2 = new Plane("heathrow", doubleweather);
-  //   });
-  //
+  });
+
+  describe('when stormy', function(){
+
     it('cannot takeoff when weather is stormy', function() {
       weather = {isSunny: function(){
         return false;
@@ -112,7 +95,7 @@ describe('Plane',function(){
       expect( function(){ plane2.takeoff() } ).toThrow("No takeoff under stormy weather conditions");
       expect(plane2.airport.name).toEqual("heathrow");
     });
-  //
+
     it('cannot land when weather is stormy', function() {
       weather = {isSunny: function(){
         return false;
@@ -126,6 +109,7 @@ describe('Plane',function(){
       expect( function(){ plane.land("heathrow") } ).toThrow("No landing under stormy weather conditions");
       expect(plane.airport).toEqual(null);
     });
-  // });
+
+  });
 
 });

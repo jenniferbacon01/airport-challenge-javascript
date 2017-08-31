@@ -7,8 +7,9 @@ var Plane = function(weather = new Weather(), airport = null){
 
 Plane.prototype.land = function (airport) {
   if(this.weather.isSunny() === true ){
-    if(this.airport.isFull() === false){
+    if(airport.isFull() === false){
       this.airport = airport;
+      this.airport.addPlane();
     }
     else{ throw "No landing when the airport is full" };
   }
@@ -17,6 +18,7 @@ Plane.prototype.land = function (airport) {
 
 Plane.prototype.takeoff = function () {
   if(this.weather.isSunny() === true){
+    this.airport.removePlane();
     this.airport = null;
   }
   else {throw "No takeoff under stormy weather conditions"};
